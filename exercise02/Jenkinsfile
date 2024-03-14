@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    parameters {
+        string defaultValue: '', description: 'Username to create', name: 'USER', trim: true
+        string defaultValue: '', description: 'Password for the user', name: 'PASSWORD', trim: true
+    }
+    stages {
+        stage ('Creating User') {
+            steps {
+                    script {
+                           sh  "sudo useradd -d /home/$USER  -m -p \$(echo '$PASSWORD' | openssl passwd -1 -stdin) $USER"
+                    }
+            }
+        }
+    }
+}
