@@ -4,10 +4,8 @@ def jsonParse(def json) {
     new groovy.json.JsonSlurperClassic().parseText(json)
 }
 pipeline {
-  agent { label 'dev' }
-  environment {
-    appName = "variable" 
-  }
+  agent any
+
   stages {
 
  stage("paso 1"){
