@@ -8,7 +8,13 @@ pipeline {
         stage ('Creating User') {
             steps {
                     script {
-                           sh  "sudo useradd -d /home/$USER  -m -p \$(echo '$PASSWORD' | openssl passwd -1 -stdin) $USER"
+                        def instance = jenkins.model.Jenkins.instance
+                    def hudsonRealm = instance.getSecurityRealm()
+
+                    def newUser = hudsonRealm.createAccount($USER, $PASSWORD)
+                    newUser.save()
+
+                    echo "Jenkins user '${$USER}' created successfully."
                     }
             }
         }
