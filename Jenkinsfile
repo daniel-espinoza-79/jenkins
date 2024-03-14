@@ -13,6 +13,7 @@ pipeline {
       steps {
           script {			
            sh "mkdir hi"
+           sh "echo 'Hola mundo' > hi/hola.txt"
         }
       }
     }
