@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clona el repositorio de Git
+                git 'https://github.com/daniel-espinoza-79/jenkins.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Compila el proyecto Maven
+                sh 'mvn compile'
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                // Ejecuta los tests del proyecto Maven
+                sh 'mvn test'
+            }
+        }
+        
+        // Otros stages si los necesitas
+    }
+    
+    post {
+        always {
+            // Siempre limpia los archivos generados
+            cleanWs()
+        }
+    }
+}
+
