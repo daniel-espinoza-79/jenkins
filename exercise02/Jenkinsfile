@@ -1,24 +1,21 @@
 pipeline {
     agent any
     parameters {
-        string defaultValue: '', description: 'Username to create', name: 'USER', trim: true
-        string defaultValue: '', description: 'Password for the user', name: 'PASSWORD', trim: true
+        string(defaultValue: '', description: 'Username to create', name: 'USER', trim: true)
+        string(defaultValue: '', description: 'Password for the user', name: 'PASSWORD', trim: true)
     }
     stages {
-        stage ('Creating User') {
+        stage('Creating User') {
             steps {
                 script {
-                    def user = hudson.model.User.get(params.USER)
-                    if (user == null) {
+                    def existingUser = hudson.model.User.get(params.USER)
+                    if (existingUser == null) {
                         def hudsonRealm = Jenkins.instance.securityRealm
-                        def userDetail = new hudson.model.UserDetail(params.USER, "Created by pipeline")
-                        user = new hudson.model.User(Jenkins.instance, params.USER, userDetail)
-                        user.save()
-                        user.addProperty(new hudson.tasks.Mailer.UserProperty(params.USER + '@yourcompany.com'))
-                        user.addProperty(new hudson.security.HudsonPrivateSecurityRealm.Details(Jenkins.instance, params.PASSWORD))
-                        println "User '${params.USER}' created successfully."
+                        def newUser = hudsonRealm.createAccount(params.USER, params.PASSWORD)
+                        newUser.save()
+                        echo "Jenkins user '${params.USER}' created successfully."
                     } else {
-                        println "User '${params.USER}' already exists."
+                        echo "Jenkins user '${params.USER}' already exists."
                     }
                 }
             }
