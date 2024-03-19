@@ -7,19 +7,17 @@ pipeline {
     stages {
         stage ('Creating User') {
             steps {
-                    script {
-                    def username = $USER
-                    def password = $PASSWORD
-
+                script {
                     def instance = jenkins.model.Jenkins.instance
                     def hudsonRealm = instance.getSecurityRealm()
 
-                    def newUser = hudsonRealm.createAccount(username, password)
+                    def newUser = hudsonRealm.createAccount(params.USER, params.PASSWORD)
                     newUser.save()
 
-                    echo "Jenkins user '${username}' created successfully."
-                    }
+                    echo "Jenkins user '${params.USER}' created successfully."
+                }
             }
         }
     }
 }
+
